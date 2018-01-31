@@ -1,5 +1,5 @@
 syntax = "proto3";
-package ericmoritz.users.users;
+package ericmoritz.users;
 option go_package = "users";
 
 // Users is a simple service for handling user registration, authentication, and authorization

@@ -48,7 +48,6 @@ func Test(t *testing.T) {
 			userResp, err := service.User(
 				context.Background(),
 				&pb.UserReq{
-					Session: loginResp.Session,
 					Username: "eric",
 				},
 			)
