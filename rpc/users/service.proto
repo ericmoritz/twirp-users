@@ -7,7 +7,7 @@ service Users {
     // Errors: AlreadyExists, InvalidArgument
     rpc Register(RegisterReq) returns (RegisterResp);
 
-    // Login a user, use the request to acquire a session object
+    // Login a user, use the request to acquire a Session message
     // Errors: PermissionDenied
     rpc Login(LoginReq) returns (LoginResp);
 
