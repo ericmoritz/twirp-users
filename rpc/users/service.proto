@@ -16,6 +16,7 @@ service Users {
     rpc User(UserReq) returns (UserResp);
 
     // CurrentUser gets the user for a session
+    // Errors: PermissionDenied
     rpc CurrentUser(CurrentUserReq) returns (CurrentUserResp);
 }
 
