@@ -1,0 +1,76 @@
+syntax = "proto3";
+package ericmoritz.users.users;
+option go_package = "users";
+
+service Users {
+    // Register a user
+    // Errors: AlreadyExists, InvalidArgument
+    rpc Register(RegisterReq) returns (RegisterResp);
+
+    // Login a user
+    // Errors: PermissionDenied
+    rpc Login(LoginReq) returns (LoginResp);
+
+    // Auth a user to see if they are logged in
+    // Errors: PermissionDenied
+    rpc User(UserReq) returns (UserResp);
+
+    // CurrentUser gets the user for a session
+    rpc CurrentUser(CurrentUserReq) returns (CurrentUserResp);
+}
+
+
+message RegisterReq {
+    string username = 1; // must be non-empty
+    string password = 2; // must be non-empty
+}
+
+message RegisterResp {
+    User user = 1;
+}
+
+message LoginReq {
+    string username = 1;
+    string password = 2;
+}
+
+message LoginResp {
+    Session session = 1;
+}
+
+message UserReq {
+    Session session = 1;
+    string username = 2;
+}
+
+message UserResp {
+    User user = 1;
+}
+
+message CurrentUserReq {
+    Session session = 1;
+}
+
+message CurrentUserResp {
+    User user = 1;
+}
+
+// User is the public user message
+message User {
+    string username = 1;
+}
+
+message Session {
+    string token = 1;
+    string username = 2;
+}
+
+
+
+// PrivateUser is the message that is stored in the DB
+message PrivateUser {
+    string username = 1;
+    bytes passwordSha256 = 2;
+}
+
+
