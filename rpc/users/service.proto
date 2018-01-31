@@ -2,16 +2,21 @@ syntax = "proto3";
 package ericmoritz.users.users;
 option go_package = "users";
 
+// Users is a simple service for handling user registration, authentication, and authorization
+
 service Users {
-    // Register a user
+    // Register a username
     // Errors: AlreadyExists, InvalidArgument
     rpc Register(RegisterReq) returns (RegisterResp);
 
-    // Login a user, use the request to acquire a Session message
+    // Login a user. Use this request to acquire a Session message. 
+    //  The Session message is used to make authenticated requests. You can store it and use it with multiple 
+    //  requests as long as the session is valid.
+    //
     // Errors: PermissionDenied
     rpc Login(LoginReq) returns (LoginResp);
 
-    // User get the details about a user
+    // User get the details about a user.
     // Errors: PermissionDenied
     rpc User(UserReq) returns (UserResp);
 
@@ -27,20 +32,20 @@ message RegisterReq {
 }
 
 message RegisterResp {
-    User user = 1;
+    User user = 1; // The user that was registered
 }
 
 message LoginReq {
-    string username = 1;
+    string username = 1; 
     string password = 2;
 }
 
 message LoginResp {
-    Session session = 1;
+    Session session = 1; // Use this Session message as your key for authenticated requests
 }
 
 message UserReq {
-    Session session = 1;
+    Session session = 1; // To get information about a user, you need to authenticate via the Login() rpc
     string username = 2;
 }
 
@@ -49,7 +54,7 @@ message UserResp {
 }
 
 message CurrentUserReq {
-    Session session = 1;
+    Session session = 1; // To get the current user's information, you need to authenticate via the Login() rpc
 }
 
 message CurrentUserResp {
