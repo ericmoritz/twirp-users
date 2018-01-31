@@ -11,7 +11,7 @@ service Users {
     // Errors: PermissionDenied
     rpc Login(LoginReq) returns (LoginResp);
 
-    // Auth a user to see if they are logged in
+    // User get the details about a user
     // Errors: PermissionDenied
     rpc User(UserReq) returns (UserResp);
 
