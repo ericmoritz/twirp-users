@@ -26,6 +26,9 @@ service Users {
 }
 
 
+///////////////////////////////////////////////////////////////////////////////
+// Register rpc
+///////////////////////////////////////////////////////////////////////////////
 message RegisterReq {
     string username = 1; // must be non-empty
     string password = 2; // must be non-empty
@@ -35,6 +38,10 @@ message RegisterResp {
     User user = 1; // The user that was registered
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Login rpc
+///////////////////////////////////////////////////////////////////////////////
 message LoginReq {
     string username = 1; 
     string password = 2;
@@ -44,8 +51,11 @@ message LoginResp {
     Session session = 1; // Use this Session message as your key for authenticated requests
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// User() rpc
+///////////////////////////////////////////////////////////////////////////////
 message UserReq {
-    Session session = 1; // To get information about a user, you need to authenticate via the Login() rpc
     string username = 2;
 }
 
@@ -53,6 +63,10 @@ message UserResp {
     User user = 1;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// CurrentUser() rpc
+///////////////////////////////////////////////////////////////////////////////
 message CurrentUserReq {
     Session session = 1; // To get the current user's information, you need to authenticate via the Login() rpc
 }
@@ -61,22 +75,28 @@ message CurrentUserResp {
     User user = 1;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
+// Data messages
+///////////////////////////////////////////////////////////////////////////////
+
+
 // User is the public user message
 message User {
     string username = 1;
 }
 
+
+// Session is a message that represents a session. Use it as your key
+// for making authenticated rpc calls
 message Session {
     string token = 1;
     string username = 2;
 }
 
 
-
-// PrivateUser is the message that is stored in the DB
+// PrivateUser is the message that is stored in the DB, do not publiclly expose it.
 message PrivateUser {
     string username = 1;
     bytes passwordSha256 = 2;
 }
-
-

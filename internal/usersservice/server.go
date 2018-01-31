@@ -92,11 +92,6 @@ func (us *userService) Login(c context.Context, req *pb.LoginReq) (*pb.LoginResp
 }
 
 func (us *userService) User(c context.Context, req *pb.UserReq) (*pb.UserResp, error) {
-	if _, err := validateSession(us.DB, req.Session); err != nil {
-		return nil, err
-	}
-
-	// a-ok, lookup user
 	user, err := getUser(us.DB, req.Username)
 	if err != nil {
 		return nil, err
@@ -129,14 +124,11 @@ func (us *userService) CurrentUser(c context.Context, req *pb.CurrentUserReq) (*
 // Internal
 ///////////////////////////////////////////////////////////////////////////////
 func validateSession(db *leveldb.DB, session *pb.Session) (*pb.Session, error) {
-	dbSession, err := getSession(db, session.Token)
-	if err != nil {
-		return nil, err
-	}
-
-	// empty session token means it was not found
-	if dbSession.Token == "" {
+	_, err := getSession(db, session.Token)
+	if err == leveldb.ErrNotFound {
 		return nil, twirp.NewError(twirp.PermissionDenied, "invalid session token")
+	} else if err != nil {
+		return nil, err
 	}
 	return session, nil
 }
@@ -151,7 +143,9 @@ func hashPassword(password string) []byte {
 
 func getUser(db *leveldb.DB, username string) (*pb.PrivateUser, error) {
 	bytes, err := db.Get(userKey(username), nil)
-	if err != nil {
+	if err == leveldb.ErrNotFound {
+		return nil, twirp.NewError(twirp.NotFound, username + " not found")
+	} else if err != nil {
 		return nil, err
 	}
 
